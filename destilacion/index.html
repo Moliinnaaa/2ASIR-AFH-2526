@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Destilación de Modelos IA y Divergencia KL</title>
+    <style>
+        :root {
+            --primary-color: #7c3aed; /* Un tono violeta para diferenciar esta práctica */
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block;
+            margin-top: 15px;
+        }
+
+        .conclusion {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .conclusion h3 {
+            color: #166534;
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Destilación de Modelos y Medición de Divergencia KL</h1>
+        
+        <p>En esta práctica exploro el concepto de <strong>Destilación de Conocimiento</strong> en Inteligencia Artificial. El objetivo es comparar un modelo "Profesor" (más grande y capaz) con un modelo "Estudiante" (más pequeño y eficiente) para ver cuánto se parecen sus respuestas matemáticas y lógicas.</p>
+
+        <!-- PASO 1 -->
+        <div class="step">
+            <h2>1. Preparación del Entorno</h2>
+            <p>Para poder ejecutar los scripts de medición y cargar los modelos, primero he tenido que instalar las bibliotecas necesarias de Python. He utilizado <code>pip</code> para instalar <code>torch</code> (para los tensores), <code>transformers</code> (para cargar los modelos de Hugging Face) y <code>accelerate</code> (para optimizar la carga en el hardware).</p>
+            <img src="destilacion1.JPG" alt="Instalación de librerías Python">
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step">
+            <h2>2. Carga de Modelos y Cálculo de Divergencia</h2>
+            <p>He ejecutado el script <code>medir_kl.py</code> que carga ambos modelos: <strong>Qwen 1.8B</strong> (Profesor) y <strong>Qwen 0.5B</strong> (Estudiante). Es importante notar que ambos comparten la misma arquitectura y tokenizador, lo cual es requisito para esta medición.</p>
+            <p>El script ha calculado una <strong>Divergencia KL de 1.76</strong>. Este valor alto indica que las distribuciones de probabilidad del estudiante difieren bastante de las del profesor, lo que el script califica como "MALO".</p>
+            <img src="destilacion2.JPG" alt="Ejecución de medir_kl.py y carga de modelos">
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step">
+            <h2>3. Análisis Detallado de Probabilidades</h2>
+            <p>Profundizando en el resultado anterior, aquí observo las predicciones <em>Top-10</em> de cada modelo para la misma entrada. Se ve claramente la diferencia: mientras el profesor asigna una probabilidad clara a la siguiente palabra (0.388 para "un"), el estudiante está más inseguro y distribuye su probabilidad de forma distinta.</p>
+            <p>Esta discrepancia visualiza perfectamente por qué la divergencia KL es alta: el estudiante aún no "piensa" como el profesor.</p>
+            <img src="destilacion3.JPG" alt="Comparación de probabilidades top-10">
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step">
+            <h2>4. Benchmark Práctico: Profesor vs Alumno</h2>
+            <p>Finalmente, he sometido a ambos modelos a un test de preguntas lógicas y matemáticas con el script <code>preguntas_dificiles.py</code>. El resultado confirma la teoría: el modelo Profesor (1.8B) responde correctamente a preguntas complejas (como operaciones matemáticas), mientras que el Alumno falla.</p>
+            <p>El marcador final de <strong>2-1 a favor del Profesor</strong> demuestra que la destilación (o la simple diferencia de tamaño) afecta directamente a la capacidad de razonamiento.</p>
+            <img src="destilacion4.JPG" alt="Benchmark de preguntas difíciles">
+        </div>
+
+        <!-- CONCLUSIÓN -->
+        <div class="conclusion">
+            <h3>Conclusión del Aprendizaje</h3>
+            <p>Con esta práctica he aprendido que:</p>
+            <ul>
+                <li>La <strong>Divergencia KL</strong> es una métrica matemática precisa para saber si un modelo pequeño está aprendiendo bien de uno grande. Un valor bajo (cercano a 0) sería ideal.</li>
+                <li>Tener el mismo tokenizador es crucial para poder comparar directamente las probabilidades de salida de dos modelos distintos.</li>
+                <li>Aunque los modelos pequeños son más rápidos y ligeros, pierden capacidades de razonamiento complejo (lógica y matemáticas) en comparación con sus versiones más grandes, como se vio en la prueba de preguntas.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Práctica realizada por Daniel Molina Yubero 2ASIR - 2026</p>
+        </div>
+    </div>
+
+</body>
+</html>
