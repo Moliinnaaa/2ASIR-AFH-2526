@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Fine-Tuning de IA con LoRA</title>
+    <style>
+        :root {
+            --primary-color: #be185d; /* Tono magenta para diferenciar esta práctica */
+            --error-color: #ef4444;   /* Rojo para la sección de errores */
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .troubleshooting {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 4px solid var(--error-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 1.4rem;
+        }
+
+        .troubleshooting h2 {
+            color: #991b1b;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        .code-snippet {
+            background-color: #27272a;
+            color: #e4e4e7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block;
+            margin-top: 15px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Fine-Tuning de un Modelo LLM (Gemma)</h1>
+        
+        <p>En esta práctica he realizado un proceso de <strong>Fine-Tuning</strong> (ajuste fino) utilizando la técnica LoRA (Low-Rank Adaptation). El objetivo ha sido entrenar un modelo pequeño (Gemma 2 270M) para que aprenda conceptos específicos del ciclo de ASIR y comandos de Linux.</p>
+
+        <!-- PASO 1 -->
+        <div class="step">
+            <h2>1. Configuración del Entorno</h2>
+            <p>Para empezar, he preparado un entorno aislado de Python. He creado un directorio de trabajo, activado el entorno virtual (<code>venv</code>) y he instalado las librerías necesarias de MLX (la librería de Apple para Machine Learning) y Hugging Face.</p>
+            <img src="tun2.JPG" alt="Creación de venv e instalación de dependencias">
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step">
+            <h2>2. Preparación del Dataset</h2>
+            <p>He creado manualmente un dataset en formato JSONL. He definido pares de preguntas y respuestas específicas sobre mi temario (definición de ASIR, comandos de Apache, etc.), generando tanto el archivo de entrenamiento (<code>train.jsonl</code>) como el de validación (<code>valid.jsonl</code>).</p>
+            <img src="tun3.JPG" alt="Creación de archivos jsonl de entrenamiento">
+        </div>
+
+        <!-- SECCIÓN DE ERRORES -->
+        <div class="troubleshooting">
+            <h2>3. Problemas Encontrados y Solución</h2>
+            <p>Durante el proceso me encontré con varios errores que tuve que solucionar antes de lograr el entrenamiento exitoso:</p>
+            
+            <p><strong>Error de Ejecución:</strong> Al principio intenté ejecutar el entrenamiento creando un archivo YAML de configuración manual, pero el sistema no reconocía bien el comando <code>mlx_lm.lora</code> o la ruta del archivo, dándome errores de "command not found" y problemas de sintaxis.</p>
+            <img src="tun5.JPG" alt="Error de comando no encontrado y configuración">
+
+            <p><strong>Error de Tamaño de Dataset:</strong> Posteriormente, al intentar lanzar el entrenamiento, recibí un <code>ValueError</code> indicando que mi dataset era demasiado pequeño para el <code>batch_size</code> configurado (tenía 1 ejemplo y el batch era de 2). Tuve que añadir más ejemplos a mis archivos JSONL para cumplir con los requisitos mínimos del entrenamiento.</p>
+            <img src="tun8.JPG" alt="Error de batch size en el dataset">
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step">
+            <h2>4. Ejecución Exitosa del Entrenamiento</h2>
+            <p>Una vez corregidos los errores anteriores (aumentando el dataset y corrigiendo la llamada al script), el proceso de fine-tuning funcionó correctamente. El script cargó el modelo base <strong>google/gemma-2-270m-it</strong> y comenzó las iteraciones, reduciendo la pérdida (loss) progresivamente.</p>
+            <img src="tun11.JPG" alt="Proceso de entrenamiento exitoso">
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step">
+            <h2>5. Verificación y Resultados</h2>
+            <p>Finalmente, probé el modelo afinado. El resultado fue exitoso: al preguntarle <em>"¿Cómo configurar Apache en Ubuntu?"</em>, el modelo respondió exactamente con el comando específico que le enseñé, validando que el aprendizaje se ha realizado correctamente.</p>
+            <img src="tun12.JPG" alt="Chat con el modelo afinado">
+        </div>
+
+        <div class="footer">
+            <p>Práctica realizada por Alumno ASIR - 2026</p>
+        </div>
+    </div>
+
+</body>
+</html>
