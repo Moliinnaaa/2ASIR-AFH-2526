@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Agente IA Local con OpenCode</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block;
+            margin-top: 15px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Implementación de Agente IA Local</h1>
+        
+        <p>En esta práctica documento el proceso de instalación y configuración de un agente de Inteligencia Artificial local. He optado por utilizar <strong>OpenCode</strong> conectado a un modelo ejecutado localmente mediante <strong>Ollama</strong>. Esta configuración permite privacidad total y uso de la GPU local sin depender de la nube.</p>
+
+        <!-- PASO 1 -->
+        <div class="step">
+            <h2>1. Instalación de dependencias</h2>
+            <p>Lo primero que he hecho ha sido instalar la herramienta OpenCode mediante el gestor de paquetes <code>npm</code>. He utilizado el comando con permisos de superusuario (<code>sudo</code>) para asegurar una instalación global correcta.</p>
+            <p>Posteriormente, he creado el directorio de configuración necesario en la ruta del usuario y he procedido a crear el archivo de configuración JSON vacío.</p>
+            <img src="agente1.JPEG" alt="Instalación de OpenCode con npm">
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step">
+            <h2>2. Configuración del Proveedor Local (Ollama)</h2>
+            <p>Para conectar el agente con mi modelo local, he editado el archivo <code>config.json</code>. Aquí he definido el proveedor como "Ollama (local)" apuntando al puerto <code>11434</code>.</p>
+            <p><strong>Nota importante sobre el modelo:</strong> Aunque existen varias opciones, he configurado específicamente el modelo <code>qwen2.5-coder:7b</code> (como se ve en la línea 12 de la captura). He elegido este modelo en lugar del genérico porque está optimizado para tareas de código y ofrece mejor rendimiento en mi hardware local.</p>
+            <img src="agente2.JPEG" alt="Edición del archivo config.json">
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step">
+            <h2>3. Ejecución del Agente</h2>
+            <p>Una vez configurado todo y guardado el archivo, me he desplazado al directorio de trabajo en el Escritorio y he lanzado el agente ejecutando el comando <code>opencode</code> en la terminal. El sistema reconoce la configuración y se inicia correctamente.</p>
+            <img src="agente3.JPEG" alt="Ejecución del comando opencode">
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step">
+            <h2>4. Verificación de Funcionamiento</h2>
+            <p>Finalmente, he comprobado que el agente responde correctamente utilizando el modelo <code>qwen2.5</code> que definí en el paso 2. Le he pedido una tarea creativa de prueba ("cuéntame un cuento") y ha generado la respuesta instantáneamente.</p>
+            <p>A la derecha he abierto el monitor de actividad para verificar que efectivamente se está utilizando la <strong>GPU integrada (Apple M4)</strong> durante la inferencia, confirmando que la IA corre 100% en local.</p>
+            <img src="agente4.JPEG" alt="Interfaz funcionando y uso de GPU">
+        </div>
+
+        <div class="footer">
+            <p>Práctica realizada por Alumno ASIR - 2026</p>
+        </div>
+    </div>
+
+</body>
+</html>
