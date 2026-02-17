@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Cuantización de Modelos IA</title>
+    <style>
+        :root {
+            --primary-color: #059669; /* Verde esmeralda para esta práctica */
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block;
+            margin-top: 15px;
+        }
+
+        .comparison-box {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cuantización de Modelos de IA</h1>
+        
+        <p>En esta práctica he realizado el proceso de <strong>cuantización</strong> de un modelo de lenguaje. El objetivo es reducir su tamaño y aumentar su velocidad de inferencia reduciendo la precisión de sus pesos (de 16 bits a 4 bits), intentando mantener la calidad de las respuestas.</p>
+
+        <!-- PASO 1 -->
+        <div class="step">
+            <h2>1. Comparativa de Tamaño de Archivos</h2>
+            <p>Antes de empezar las pruebas de rendimiento, he verificado la diferencia de tamaño en disco. Como se puede ver en la captura, el modelo original (<code>fp16</code>) ocupa <strong>1,2 GB</strong>, mientras que la versión cuantizada (<code>q4_k_m</code>) se reduce drásticamente a <strong>469 MB</strong>.</p>
+            <p>Esta reducción de casi un 60% es fundamental para poder ejecutar modelos en dispositivos con menos memoria RAM.</p>
+            <img src="cuantizacion1.jpg" alt="Diferencia de tamaño entre modelos">
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step">
+            <h2>2. Proceso de Cuantización</h2>
+            <p>Para generar el modelo comprimido, he utilizado la herramienta <code>llama-quantize</code>. En la captura se observa cómo el programa recorre los diferentes tensores del modelo y reduce su precisión. He elegido el método <strong>Q4_K_M</strong> (4-bit quantization), que ofrece un excelente equilibrio entre compresión y retención de "inteligencia".</p>
+            <img src="cuantizacion2.jpg" alt="Ejecución de llama-quantize">
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step">
+            <h2>3. Prueba del Modelo Original (FP16)</h2>
+            <p>He ejecutado el modelo original sin comprimir para establecer una línea base. Al pedirle que explique qué es un servidor DNS, la generación de texto ha funcionado a una velocidad de <strong>95,2 tokens por segundo</strong>.</p>
+            <p>La respuesta generada (que muestro en la siguiente imagen) es técnicamente correcta y detallada.</p>
+            <img src="cuantizacion3.jpg" alt="Benchmark modelo original">
+            <img src="cuantizacion4.jpg" alt="Respuesta del modelo original">
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step">
+            <h2>4. Prueba del Modelo Cuantizado (Q4)</h2>
+            <p>A continuación, he realizado la misma prueba con el modelo cuantizado. El impacto en el rendimiento es inmediato: la velocidad de generación ha subido a <strong>174,6 tokens por segundo</strong>. ¡Es casi el doble de rápido que el original!</p>
+            <p>Al revisar la respuesta generada sobre administración de sistemas, compruebo que la calidad del texto se mantiene intacta, demostrando que la pérdida de precisión de 16 a 4 bits no ha afectado a la coherencia en este caso.</p>
+            <img src="cuantizacion6.jpg" alt="Benchmark modelo cuantizado">
+            <img src="cuantizacion5.jpg" alt="Respuesta del modelo cuantizado">
+        </div>
+
+        <!-- CONCLUSIÓN -->
+        <div class="comparison-box">
+            <h3>Conclusión Técnica</h3>
+            <p>La cuantización ha demostrado ser una técnica muy efectiva. He conseguido:</p>
+            <ul>
+                <li>Reducir el consumo de memoria en un <strong>60%</strong> (de 1.2GB a 469MB).</li>
+                <li>Aumentar la velocidad de inferencia en un <strong>83%</strong> (de 95 a 174 t/s).</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Práctica realizada por Daniel Molina Yubero 2ASIR - 2026</p>
+        </div>
+    </div>
+
+</body>
+</html>
