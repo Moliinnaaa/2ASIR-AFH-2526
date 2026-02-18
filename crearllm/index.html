@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Creación de un Modelo LLM (Chef-Bot)</title>
+    <style>
+        :root {
+            --primary-color: #d97706; /* Color ámbar/naranja para "Chef-Bot" */
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --warning-bg: #fffbeb;
+            --warning-border: #fcd34d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block;
+            margin-top: 15px;
+        }
+
+        .status-report {
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .status-report h3 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Creación de un Asistente de Cocina (Chef-Bot)</h1>
+        
+        <p>En esta práctica he documentado el proceso de diseño y configuración para entrenar un LLM especializado. El objetivo era crear "Chef-Bot", un asistente basado en el modelo <strong>Phi-3-mini</strong> capaz de sugerir recetas a partir de ingredientes, utilizando la herramienta de entrenamiento <strong>Axolotl</strong>.</p>
+
+        <!-- PASO 1 -->
+        <div class="step">
+            <h2>1. Preparación del Espacio de Trabajo</h2>
+            <p>Comencé creando la estructura del proyecto. Generé una carpeta dedicada <code>mi-chef-bot</code> y activé el entorno virtual para gestionar las dependencias de Python. También creé los archivos vacíos necesarios para el dataset y la configuración.</p>
+            <img src="llm1.JPG" alt="Creación de directorio y archivos">
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step">
+            <h2>2. Diseño del Dataset (Recetas)</h2>
+            <p>Para especializar al modelo, creé manualmente el archivo <code>recetas.jsonl</code>. Seguí el formato estándar de instrucción/respuesta (<code>instruction</code> / <code>output</code>). Como se ve en la captura, diseñé ejemplos donde el usuario da ingredientes (ej: "pollo, limón, ajo") y el bot responde con una receta completa paso a paso.</p>
+            <img src="llm2.JPG" alt="Contenido del dataset recetas.jsonl">
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step">
+            <h2>3. Configuración del Entrenamiento (Axolotl)</h2>
+            <p>El núcleo de la práctica fue configurar el archivo YAML para Axolotl. En él definí:</p>
+            <ul>
+                <li><strong>Modelo Base:</strong> <code>microsoft/Phi-3-mini-4k-instruct</code>.</li>
+                <li><strong>Dataset:</strong> Ruta a mi archivo <code>recetas.jsonl</code>.</li>
+                <li><strong>Adaptador:</strong> Configuración de <strong>LoRA</strong> (rank 16, alpha 32) para un entrenamiento eficiente en memoria.</li>
+                <li><strong>Cuantización:</strong> Activé <code>load_in_4bit: true</code> para poder entrenar en hardware de consumo.</li>
+            </ul>
+            <img src="llm3.JPG" alt="Creación del archivo YAML">
+            <img src="llm4.JPG" alt="Detalle de la configuración en YAML">
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step">
+            <h2>4. Ejecución del Entrenamiento</h2>
+            <p>Finalmente, intenté lanzar el proceso de entrenamiento utilizando la librería <code>accelerate</code> apuntando a mi archivo de configuración.</p>
+            <img src="llm5.JPG" alt="Ejecución del comando accelerate launch">
+        </div>
+
+        <!-- ESTADO DEL PROYECTO -->
+        <div class="status-report">
+            <h3>Estado Final del Proyecto</h3>
+            <p><strong>Resultado:</strong> La configuración del modelo, el diseño del dataset y la parametrización de LoRA se completaron correctamente según las especificaciones. Sin embargo, el proceso de entrenamiento no pudo finalizarse debido a problemas de dependencias en el entorno local (error en la detección del comando o librerías incompatibles con la arquitectura M4).</p>
+            <p>A pesar del error de ejecución final, la estructura lógica para crear el LLM está lista y verificada.</p>
+        </div>
+
+        <div class="footer">
+            <p>Práctica realizada por Daniel Molina Yubero 2ASIR - 2026</p>
+        </div>
+    </div>
+
+</body>
+</html>
